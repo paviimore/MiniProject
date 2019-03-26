@@ -1,28 +1,29 @@
 from flask import Flask, render_template, request, jsonify
-import plotly.graph_objs as go
-from plotly.utils import PlotlyJSONEncoder
 import json
 import requests
 import requests_cache
 from cassandra.cluster import Cluster
 import uuid
-from flask import Flask
-from flask.ext.cqlalchemy import CQLAlchemy
+from flask_cqlalchemy import CQLAlchemy
+from cassandra.cluster import Cluster
+cluster = Cluster(['127.0.0.1'])
+session = cluster.connect()
+app = Flask(__name__)
 
-app = Flask(__name__, instance_relative_config=True)
-app.config.from_object('config')
-app.config.from_pyfile('config.py')
-
-app.config['CASSANDRA_HOSTS'] = ['127.0.0.1']
-app.config['CASSANDRA_KEYSPACE'] = "cqlengine"
+app.config['CASSANDRA_HOSTS'] = ['Cassandra']
+app.config['CASSANDRA_KEYSPACE'] = "forex"
 db = CQLAlchemy(app)
 
-class Forex(db.Model):
-    Country = db.columns.Text(required=False)
-    Country_code = db.columns.Text(required=False)
-    Currency = db.columns.Text(required=False)
-    Currency_code = db.columns.Text(required=False)
 
+class Exchange(db.Model):
+    country = db.columns.Text(required=False, primary_key = True)
+    countrycode = db.columns.Text(required=False)
+    currency = db.columns.Text(required=False)
+    code = db.columns.Text(required=False)
+db.sync_db()
+
+
+#Exchange.create(Country= 'Asgard', CountryCode= 'ASG', Currency= 'Gallions', Code = 'GLL')
 
 requests_cache.install_cache('exchange_api_cache', backend='sqlite', expire_after=36000)
 
@@ -73,17 +74,14 @@ def convert():
 
 @app.route('/entryCode', methods=['POST'])
 def entry_code():
-    ''' create or add new code '''
-    data = request.get_json()
-    if data['ok']:
-        data = data['data']
-        person = Forex(Country= data['Country'], Country_code= data['Country_code'],
-                    Currency= data['Currency'], Currency_code= data['Currency_code'])
-        person.save()
-        return jsonify({'ok': True, 'data': data, 'message': 'Country code added successfully!'}), 200
+    # create or add new code
+    query = request.args
+    rows = session.execute("""insert into forex.exchange (country, countrycode, currency, code) values('{}',
+    '{}','{}','{}');""".format(query['country'], query['countrycode'], query['currency'], query['code']))
 
-    else:
-        return jsonify({'ok': False, 'message': 'Bad request parameters: {}'.format(data['message'])}), 400
+    #rows = session.execute("""insert into forex.exchange (country, countrycode, currency, code) values('Wakanda', 'Wak','Vibranium','vib');""")
+    return jsonify({'ok': True, 'message': 'Country code added successfully!'}), 200
+
 
 
 @app.route('/code', methods=['GET', 'DELETE'])
@@ -91,28 +89,23 @@ def code():
     ''' route read user '''
     if request.method == 'GET':
         query = request.args
-        data = Forex.get('Country'= query['Country'])
+        data = Exchange.get(country = query['country'])
         if bool(data):
             user = {}
-            user['Country'] = data['Country']
-            user['Code'] = data['Code']
+            user['country'] = data['country']
+            user['currency'] = data['currency']
+            user['code'] = data['code']
 
             return jsonify({'ok': True, 'data': user}), 200
         else:
             return jsonify({'ok': False, 'message': 'No user exist with this mail'}), 400
 
-    data = request.get_json()
+
     if request.method == 'DELETE':
-             query = Forex.get('Country'= data['Country'])
-            if bool(query):
-                db_response = Forex.delete('Country' = data['Country']
-                response = {'ok': True, 'message': 'record deleted'}
-            else:
-                response = {'ok': True, 'message': 'no record found'}
-            return jsonify(response), 200
-        else:
-            return jsonify({'ok': False, 'message': 'Bad request parameters!'}), 400
+        query = request.args
+        rows = session.execute("""delete from forex.exchange where country = '{}';""".format(query['country']))
+        return jsonify({'ok': True, 'message': 'Country data deleted successfully!'}), 200
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     app.run(port=8080, debug=True)
