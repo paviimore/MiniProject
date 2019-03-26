@@ -3,3 +3,4 @@ Flask==0.12.2
 requests
 requests-cache
 plotly
+cassandra−driver
