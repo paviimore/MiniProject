@@ -1,6 +1,7 @@
-pip>=9.0.1
-Flask==0.12.2
+pip
+Flask
 requests
 requests-cache
-plotly
-cassandra−driver
+cassandra-driver
+Flask-CQLAlchemy
+PyOpenSSL

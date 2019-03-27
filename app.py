@@ -6,11 +6,11 @@ from cassandra.cluster import Cluster
 import uuid
 from flask_cqlalchemy import CQLAlchemy
 from cassandra.cluster import Cluster
-cluster = Cluster(['127.0.0.1'])
+cluster = Cluster(['127.0.0.1']) #cassandra
 session = cluster.connect()
 app = Flask(__name__)
 
-app.config['CASSANDRA_HOSTS'] = ['Cassandra']
+app.config['CASSANDRA_HOSTS'] = ['127.0.0.1'] #127.0.0.1
 app.config['CASSANDRA_KEYSPACE'] = "forex"
 db = CQLAlchemy(app)
 
@@ -31,6 +31,10 @@ market_url= 'https://forex.1forge.com/1.0.3/market_status?api_key={key}'
 forex_url= 'https://forex.1forge.com/1.0.3/quotes?pairs={pairs}&api_key={key}'
 convert_url = 'https://forex.1forge.com/1.0.3/convert?from={fromCurrency}&to={toCurrency}&quantity={qty}&api_key={key}'
 my_key = 'fCDpGAWjek59ZneVAawGJNbSRSWP6bD2'
+
+@app.route('/')
+def index():
+   return '<html><body><h1>FOREX CURRENCY EXCHANGE</h1></body></html>'
 
 @app.route('/marketstatus',  methods=['GET'])
 def market():
@@ -108,4 +112,4 @@ def code():
 
 
 if __name__ == "__main__":
-    app.run(port=8080, debug=True)
+    app.run( port=8080, debug = True, ssl_context='adhoc') #host='0.0.0.0' ssl_context='adhoc'
