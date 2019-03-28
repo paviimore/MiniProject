@@ -67,7 +67,23 @@ This is successful if the terminal is displaying the following:
 ```
 Clicking on the link should take you to the website.
 
+## API
 
+* GET 
+``` 
+/marketstatus 
+/exchangerate?pairs="GivenPair"
+/convert?from="InputCurrency"&to="OutputCurrency"&qty="quantity"
+/code?country="CountryInDatabase"
+```
+* POST 
+```
+/entryCode?country="data1"&countrycode="data2"&currency="data3"&code="data4"
+```
+* DELETE 
+```
+/code?country="CountryInDatabase"
+```
 
 ## Deployment
 
