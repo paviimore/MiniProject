@@ -126,8 +126,7 @@ kubectl get services
 
 * [Cassandra](http://cassandra.apache.org/doc/latest/) - Database used
 * [Flask](http://flask.pocoo.org/docs/1.0/) - Web framework used
-* [1Forge External API] (https://1forge.com/forex-data-api/api-documentation)
-
+* [1Forge](https://1forge.com/forex-data-api) - External API used
 
 ## Authors
 
