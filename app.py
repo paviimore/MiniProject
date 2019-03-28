@@ -112,4 +112,4 @@ def code():
 
 
 if __name__ == "__main__":
-    app.run( port=8080, debug = True, ssl_context='adhoc') #host='0.0.0.0' ssl_context='adhoc'
+    app.run( host='104.155.184.138', port=80, debug = True, ssl_context='adhoc')
