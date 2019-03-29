@@ -6,11 +6,11 @@ from cassandra.cluster import Cluster
 import uuid
 from flask_cqlalchemy import CQLAlchemy
 from cassandra.cluster import Cluster
-cluster = Cluster(['127.0.0.1']) #cassandra
+cluster = Cluster(['cassandra']) 
 session = cluster.connect()
 app = Flask(__name__)
 
-app.config['CASSANDRA_HOSTS'] = ['127.0.0.1'] #127.0.0.1
+app.config['CASSANDRA_HOSTS'] = ['cassandra'] 
 app.config['CASSANDRA_KEYSPACE'] = "forex"
 db = CQLAlchemy(app)
 
