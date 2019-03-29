@@ -143,6 +143,8 @@ kubectl get services
 * [Cassandra](http://cassandra.apache.org/doc/latest/) - Database used
 * [Flask](http://flask.pocoo.org/docs/1.0/) - Web framework used
 * [1Forge](https://1forge.com/forex-data-api) - External API used
+* [Kubernetes](https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/) - Load balancing & Scaling
+* [Encryption & Security](https://blog.miguelgrinberg.com/post/running-your-flask-application-over-https) - TLS protocol using 'adhoc' SSL
 
 ## Authors
 
