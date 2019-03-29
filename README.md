@@ -134,9 +134,10 @@ kubectl run forex-app --image=gcr.io/${PROJECT_ID}/forex-app:v1 --port 8080
 
 kubectl expose deployment forex-app --type=LoadBalancer --port 80 --target-port 8080
 ```
-Check services for the IP address 
+Check services for the IP address: 
+```
 kubectl get services
-
+```
 
 ## Built With
 
